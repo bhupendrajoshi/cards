@@ -1,5 +1,20 @@
 {
   "expo": {
-    "sdkVersion": "23.0.0"
+    "sdkVersion": "23.0.0",
+    "orientation": "portrait",
+    "name": "UdaciCards",
+    "description": "Make your own quiz",
+    "slug": "udacicards",
+    "version": "1.0",
+    "icon": "https://11m5ki43y82budjol1gjvv5s-wpengine.netdna-ssl.com/wp-content/uploads/2016/03/prepster-icon.png",
+    "notification": {
+      "icon": "https://11m5ki43y82budjol1gjvv5s-wpengine.netdna-ssl.com/wp-content/uploads/2016/03/prepster-icon.png"
+    },
+    "ios": {
+      "bundleIdentifier": "org.udacicards.exp"
+    },
+    "android": {
+      "package": "org.udacicards.exp"
+    }
   }
 }
