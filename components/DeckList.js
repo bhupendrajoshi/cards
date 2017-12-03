@@ -1,30 +1,22 @@
-import React, { Component } from 'react'
-import { View, Text, StyleSheet, Platform, TouchableOpacity, FlatList } from 'react-native'
-import { connect } from 'react-redux'
-import { receiveDecks } from '../actions'
+import React, { Component } from 'react';
+import { View, Text, StyleSheet, Platform, TouchableOpacity, FlatList } from 'react-native';
+import { connect } from 'react-redux';
+import { receiveDecks } from '../actions';
 import { getDecks } from '../utils/api';
 import { white } from '../utils/colors';
 import { AppLoading } from 'expo';
 
 class DeckList extends Component {
-  state = {
-    ready: false
-  }
-
   componentDidMount() {
-    const { dispatch } = this.props
-
-    getDecks()
-      .then((decks) => dispatch(receiveDecks(decks)))
-      .then(() => this.setState(() => ({ ready: true })))
+    this.props.receiveDecks();
   }
 
   renderItem = ({ item }) => (
     <View style={styles.item}>
       <TouchableOpacity
           onPress={() => this.props.navigation.navigate(
-            'EntryDetail',
-            { entryId: key }
+            'DeckDetail',
+            { entryId: item.key }
           )}
         >
           <Text style={styles.deckTitle}>{item.title}</Text>
@@ -37,19 +29,17 @@ class DeckList extends Component {
   )
 
   render() {
-    const { decks } = this.props
-    const { ready } = this.state
+    const { decks, ready } = this.props
 
     if (ready === false) {
       return <AppLoading />
     }
 
-    return (
-      <FlatList
-        data={decks}
-        renderItem={this.renderItem}
-      />
-    )
+    if (decks && decks.length > 0) {
+      return (<FlatList data={decks} renderItem={this.renderItem} />);
+    }
+    
+    return (<Text style={styles.noCards}>No decks</Text>);
   }
 }
 
@@ -78,6 +68,9 @@ const styles = StyleSheet.create({
     fontSize: 10,
     opacity: 0.8,
     textAlign: 'center'
+  },
+  noCards: {
+    textAlign: 'center',
   }
 })
 
@@ -93,10 +86,18 @@ function mapStateToProps(decks) {
   }
 
   return {
-    decks: decksArray
+    decks: decksArray,
+    ready: true
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    receiveDecks: () => dispatch(receiveDecks())
   }
 }
 
 export default connect(
   mapStateToProps,
+  mapDispatchToProps
 )(DeckList)

@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Platform, StatusBar } from 'react-native';
 import { TabNavigator, StackNavigator } from 'react-navigation';
 
-import { createStore } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import { Provider } from 'react-redux';
+import thunkMiddleware from 'redux-thunk';
 import reducer from './reducers/';
 
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
@@ -11,7 +12,8 @@ import { Constants } from 'expo';
 import { purple, white } from './utils/colors';
 
 import DeckList from './components/DeckList';
-import AddDeck from './components//AddDeck';
+import AddDeck from './components/AddDeck';
+import DeckDetail from './components/DeckDetail';
 
 function UdaciStatusBar({ backgroundColor, ...props }) {
   return (
@@ -62,10 +64,26 @@ const Tabs = TabNavigator(
 const MainNavigator = StackNavigator({
   Home: {
     screen: Tabs,
+  },
+  DeckDetail: {
+    screen: DeckDetail,
+    navigationOptions: {
+      headerTintColor: white,
+      headerStyle: {
+        backgroundColor: purple,
+      }
+    }
   }
 });
 
-const store = createStore(reducer);
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+const store = createStore(
+  reducer,
+  composeEnhancers(
+    applyMiddleware(thunkMiddleware)
+  )
+);
 
 export default class App extends React.Component {
   render() {

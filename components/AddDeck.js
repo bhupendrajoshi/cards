@@ -26,7 +26,7 @@ class AddDeck extends Component {
   submit = () => {
     const deck = this.state
 
-    this.props.dispatch(addDeck(deck));
+    this.props.addDeck(deck);
 
     this.setState(() => ({ title: '' }))
 
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
 
 function mapDispatchToProps(dispatch) {
   return {
-    addDeck: (data) => dispatch(addDeck(data))
+    addDeck: (deck) => dispatch(addDeck(deck))
   }
 }
 
