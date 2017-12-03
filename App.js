@@ -17,6 +17,8 @@ import DeckDetail from './components/DeckDetail';
 import Quiz from './components/Quiz';
 import NewCard from './components/NewCard';
 
+import { setLocalNotification } from './utils/notifications';
+
 function UdaciStatusBar({ backgroundColor, ...props }) {
   return (
     <View style={{ backgroundColor, height: Constants.statusBarHeight }}>
@@ -106,6 +108,10 @@ const store = createStore(
 );
 
 export default class App extends React.Component {
+  componentDidMount() {
+    setLocalNotification()
+  }
+
   render() {
     return (
       <Provider store={store}>

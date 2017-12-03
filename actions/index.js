@@ -1,4 +1,5 @@
 import { getDecks, createDeck, createCardForDeck } from '../utils/api';
+import { clearLocalNotification } from '../utils/notifications';
 
 export const RECEIVE_DECKS = 'RECEIVE_DECKS';
 export const ADD_DECK = 'ADD_DECK';
@@ -28,10 +29,7 @@ export function addCardDeckToState(deckKey, card) {
 
 export function receiveDecks() {
   return (dispatch) => {
-    getDecks().then((decks) => {
-      console.log(decks);
-      dispatch(addDecksToState(decks));
-    });
+    getDecks().then((decks) => dispatch(addDecksToState(decks)));
   }
 }
 
@@ -44,5 +42,11 @@ export function addDeck(deck) {
 export function addCardToDeck(deckKey, card) {
   return (dispatch) => {
     createCardForDeck(deckKey, card).then(() => dispatch(addCardDeckToState(deckKey, card)));
+  }
+}
+
+export function quizComplete() {
+  return (dispatch) => {
+    clearLocalNotification();
   }
 }

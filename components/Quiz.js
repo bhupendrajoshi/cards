@@ -24,6 +24,26 @@ class Quiz extends Component {
       correctAnswerCount: 0
     }
   }
+  
+  reset = () => {
+    this.setState((state) => {
+      return { 
+        isFlipped: false,
+        currentQuestionIndex: 0,
+        correctAnswerCount: 0
+      };
+    });  
+  }
+
+  nextQuestion = (isAnswerCorrect = false) => {
+    this.setState((state) => {
+      return { 
+        isFlipped: false,
+        currentQuestionIndex: state.currentQuestionIndex + 1,
+        correctAnswerCount: isAnswerCorrect ? state.correctAnswerCount + 1 : state.correctAnswerCount
+      };
+    });
+  }
 
   render() {
     const { deck } = this.props;
@@ -57,31 +77,24 @@ class Quiz extends Component {
                   <Text style={styles.answer}>{currentQuestion.answer}</Text>
                   
                   <TextButton 
-                    onPress={() => 
-                      this.setState((state) => {
-                        return { 
-                          isFlipped: false,
-                          currentQuestionIndex: state.currentQuestionIndex + 1,
-                          correctAnswerCount: state.correctAnswerCount + 1
-                        };
-                    })}
+                    onPress={() => this.nextQuestion(true)}
                   >
                     Correct
                   </TextButton>
           
                   <TextButton 
-                    onPress={() => 
-                      this.setState((state) => {
-                        return { 
-                          isFlipped: false,
-                          currentQuestionIndex: state.currentQuestionIndex + 1
-                        };
-                    })}
+                    onPress={() => this.nextQuestion()}
                     isDefault={true}>
                     Incorrect
                   </TextButton>
                 </View>
             }
+                      
+            <TextButton 
+              onPress={() => this.reset()}
+              isDefault={true}>
+              Restart Quiz
+            </TextButton>
         </View>
       </View>
     )

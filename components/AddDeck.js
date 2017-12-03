@@ -41,7 +41,7 @@ class AddDeck extends Component {
           style={styles.input}
           onChangeText={(text) => this.setState({title: text})}
           value={this.state.title} />
-        <TextButton onPress={this.submit}>
+        <TextButton onPress={this.submit} disabled={this.state.title === ''}>
           Add Deck
         </TextButton>
       </View>

@@ -33,7 +33,7 @@ class DeckDetail extends Component {
           Add Card
         </TextButton>
 
-        {questionCount.length > 0 && 
+        {questionCount > 0 && 
           (
             <TextButton 
               onPress={() => navigation.navigate(

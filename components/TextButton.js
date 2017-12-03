@@ -3,9 +3,17 @@ import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { gray, green } from '../utils/colors';
 
 export default function TextButton({ children, onPress, isDefault = false, disabled = false, style = {} }) {
+  let btnStyles = isDefault 
+    ? [styles.btn, styles.default, style] 
+    : [styles.btn, styles.colored, style];
+
+  if (disabled) {
+    btnStyles.push(styles.disabled);
+  }
+
   return (
     <TouchableOpacity onPress={onPress} disabled={disabled}>
-      <Text style={isDefault ? [styles.btn, styles.default, style] : [styles.btn, styles.colored, style]}>{children}</Text>
+      <Text style={btnStyles}>{children}</Text>
     </TouchableOpacity>
   )
 }
@@ -30,5 +38,8 @@ const styles = StyleSheet.create({
     color: 'white',
     backgroundColor: green,
     borderColor: green, 
+  },
+  disabled: {
+    opacity: 0.5
   }
 })
