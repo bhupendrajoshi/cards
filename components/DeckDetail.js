@@ -1,21 +1,53 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 
+import TextButton from './TextButton';
 import { white } from '../utils/colors';
-import { addCardToDeck } from '../actions';
 
 class DeckDetail extends Component {
   static navigationOptions = ({ navigation }) => {
     const { entryId } = navigation.state.params
+
+    return {
+      title: entryId
+    }  
   }
 
   render() {
-    const { deck } = this.props;
+    const { deck, questionCount, navigation } = this.props;
 
     return (
       <View style={styles.container}>
-        <Text style={styles.deckTitle}>{deck.title}</Text>                
+        <Text style={styles.deckTitle}>{deck.title}</Text>
+
+        <Text style={styles.cardCount}>{questionCount} cards</Text>
+
+        <TextButton 
+          onPress={() => navigation.navigate(
+            'NewCard',
+            { entryId: deck.key }
+          )}
+          isDefault={true}
+        >
+          Add Card
+        </TextButton>
+
+        {questionCount.length > 0 && 
+          (
+            <TextButton 
+              onPress={() => navigation.navigate(
+                'Quiz',
+                { 
+                  entryId: deck.key,
+                  questionIndex: 0
+                }
+              )}
+            >
+              Start Quiz
+            </TextButton>
+          )
+        }
       </View>
     )
   }
@@ -26,33 +58,35 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: white,
     padding: 15,
+    justifyContent: 'center',
   },
   deckTitle: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,    
-  },  
+  },
+  cardCount: {
+    fontSize: 10,
+    opacity: 0.8,
+    textAlign: 'center'
+  },
+  noCards: {
+    textAlign: 'center',
+  } 
 })
 
 function mapStateToProps(state, { navigation }) {
   const { entryId } = navigation.state.params
+  const deck = state[entryId];
+  const questionCount = deck && deck.questions ? deck.questions.length : 0;
 
   return {
     entryId,
-    deck: state[entryId],
-  }
-}
-
-function mapDispatchToProps(dispatch, { navigation }) {
-  const { entryId } = navigation.state.params
-
-  return {
-    addCardToDeck: (card) => dispatch(addCardToDeck(deckTitle, card)),
-    goBack: () => navigation.goBack(),
+    deck,
+    questionCount,
   }
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
+  mapStateToProps
 )(DeckDetail) 

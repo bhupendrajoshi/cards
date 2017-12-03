@@ -14,5 +14,15 @@ export function createDeck(deck, key) {
 }
 
 export function createCardForDeck(deckKey, card) {
-  
+  return getDecks()
+    .then((decks) => {
+      let newState = { ...decks };
+      let deck = newState[deckKey];
+      if (!deck.questions) {
+        deck.questions = [];
+      }
+      deck.questions.push(card);
+      return newState;
+    })
+    .then(decks => AsyncStorage.setItem(DECKS_STORAGE_KEY, JSON.stringify(decks)));
 }

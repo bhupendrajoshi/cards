@@ -1,4 +1,4 @@
-import { RECEIVE_DECKS, ADD_DECK } from '../actions';
+import { RECEIVE_DECKS, ADD_DECK, ADD_CARD_TO_DECK } from '../actions';
 
 const initialState = {
   React: {
@@ -37,6 +37,15 @@ function decks(state = initialState, action) {
         ...state,
         ...action.deck
       };
+    case ADD_CARD_TO_DECK:
+      let newState = { ...state };
+      let deck = newState[action.deckKey];
+      if (!deck.questions) {
+        deck.questions = [];
+      }
+      deck.questions.push(action.card);
+      return newState;
+
     default:
       return state;
   }

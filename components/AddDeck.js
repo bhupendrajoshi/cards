@@ -5,30 +5,26 @@ import { NavigationActions } from 'react-navigation';
 import { Ionicons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
-import { addDeck } from '../actions';
-import { purple, white } from '../utils/colors'
 
-function SubmitBtn({ onPress }) {
-  return (
-    <TouchableOpacity
-      style={Platform.OS === 'ios' ? styles.iosSubmitBtn : styles.AndroidSubmitBtn}
-      onPress={onPress}>
-      <Text style={styles.submitBtnText}>SUBMIT</Text>
-    </TouchableOpacity>
-  )
-}
+import { addDeck } from '../actions';
+import { white, gray } from '../utils/colors';
+import TextButton from './TextButton';
 
 class AddDeck extends Component {
-  state = {
-    title: ''
-  };
+  constructor() {
+    super();
+
+    this.state = {
+      title: ''
+    };
+  }
 
   submit = () => {
     const deck = this.state
 
     this.props.addDeck(deck);
 
-    this.setState(() => ({ title: '' }))
+    this.setState(() => ({ title: '' }));
 
     this.toHome();
   }
@@ -40,12 +36,14 @@ class AddDeck extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={styles.deckTitle}>What is the title of your new deck?</Text>
+        <Text style={styles.label}>What is the title of your new deck?</Text>
         <TextInput 
-          style={styles.deckTitleInput}
+          style={styles.input}
           onChangeText={(text) => this.setState({title: text})}
           value={this.state.title} />
-        <SubmitBtn onPress={this.submit} />
+        <TextButton onPress={this.submit}>
+          Add Deck
+        </TextButton>
       </View>
     )
   }
@@ -55,43 +53,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: white
-  },
-  iosSubmitBtn: {
-    backgroundColor: purple,
-    padding: 10,
-    borderRadius: 7,
-    height: 45,
-    marginTop: 10,
-    marginLeft: 40,
-    marginRight: 40,
-  },
-  AndroidSubmitBtn: {
-    backgroundColor: purple,
-    padding: 10,
-    paddingLeft: 30,
-    paddingRight: 30,
-    height: 45,
-    borderRadius: 2,
-    alignSelf: 'flex-end',
+    backgroundColor: white,
     justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 10,
   },
-  submitBtnText: {
-    color: white,
-    fontSize: 22,
-    textAlign: 'center',
-  },
-  deckTitle: {
+  label: {
     fontSize: 20,
     textAlign: 'center',
     margin: 10,    
   },
-  deckTitleInput: {
+  input: {
     fontSize: 20,
     textAlign: 'center',
-    borderColor: 'gray', 
+    borderColor: gray, 
     borderWidth: 1,
     borderRadius: 2,
     margin: 10,
