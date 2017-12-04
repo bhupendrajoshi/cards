@@ -11,35 +11,26 @@ import { white, gray } from '../utils/colors';
 import TextButton from './TextButton';
 
 class AddDeck extends Component {
-  constructor() {
-    super();
-
-    this.state = {
-      title: ''
-    };
-  }
+  state = {
+    title: ''
+  };
 
   submit = () => {
-    const deck = this.state
-
-    this.props.addDeck(deck);
-
-    this.setState(() => ({ title: '' }));
-
-    this.toHome();
-  }
-
-  toHome = () => {
-    this.props.navigation.dispatch(NavigationActions.back({ key: 'AddDeck' }))
+    const { title } = this.state;
+    this.setState({ title: '' }, () => {
+      this.props.addDeck({ title });
+      this.props.navigation.navigate('DeckDetail', { entryId: title });
+    });
   }
 
   render() {
+    const { container, label, input } = styles;
     return (
-      <View style={styles.container}>
-        <Text style={styles.label}>What is the title of your new deck?</Text>
-        <TextInput 
-          style={styles.input}
-          onChangeText={(text) => this.setState({title: text})}
+      <View style={container}>
+        <Text style={label}>What is the title of your new deck?</Text>
+        <TextInput
+          style={input}
+          onChangeText={(text) => this.setState({ title: text })}
           value={this.state.title} />
         <TextButton onPress={this.submit} disabled={this.state.title === ''}>
           Add Deck
@@ -59,12 +50,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,    
+    margin: 10,
   },
   input: {
     fontSize: 20,
     textAlign: 'center',
-    borderColor: gray, 
+    borderColor: gray,
     borderWidth: 1,
     borderRadius: 2,
     margin: 10,

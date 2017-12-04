@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 
 import TextButton from './TextButton';
 import { white } from '../utils/colors';
-import { addCardToDeck } from '../actions';
+import { clearLocalNotification, setLocalNotification } from '../utils/notifications';
 
 class Quiz extends Component {
   static navigationOptions = ({ navigation }) => {
@@ -12,88 +12,100 @@ class Quiz extends Component {
 
     return {
       title: entryId
-    }  
-  }
-
-  constructor(){
-    super();
-
-    this.state = {
-      currentQuestionIndex: 0,
-      isFlipped: false,
-      correctAnswerCount: 0
     }
   }
-  
+
+  state = {
+    currentQuestionIndex: 0,
+    isFlipped: false,
+    correctAnswerCount: 0
+  };
+
   reset = () => {
     this.setState((state) => {
-      return { 
+      return {
         isFlipped: false,
         currentQuestionIndex: 0,
         correctAnswerCount: 0
       };
-    });  
+    });
   }
 
   nextQuestion = (isAnswerCorrect = false) => {
     this.setState((state) => {
-      return { 
+      return {
         isFlipped: false,
         currentQuestionIndex: state.currentQuestionIndex + 1,
         correctAnswerCount: isAnswerCorrect ? state.correctAnswerCount + 1 : state.correctAnswerCount
       };
+    }, () => {
+      if (this.state.currentQuestionIndex === this.props.deck.questions.length) {
+        clearLocalNotification().then(() => setLocalNotification());
+      }
     });
   }
 
   render() {
-    const { deck } = this.props;
+    const { deck: { questions }, goBack } = this.props;
     const { currentQuestionIndex, isFlipped, correctAnswerCount } = this.state;
 
-    if (currentQuestionIndex === deck.questions.length) {
+    if (currentQuestionIndex === questions.length) {
       return (
         <View style={styles.container}>
           <Text style={styles.question}>Quiz Complete</Text>
-          <Text style={styles.seeAnswer}>{correctAnswerCount} out of {deck.questions.length} correct answers</Text>
+          <Text style={styles.seeAnswer}>{correctAnswerCount} out of {questions.length} correct answers</Text>
+
+          <TextButton
+            onPress={() => this.reset()}
+            isDefault={true}>
+            Restart Quiz
+          </TextButton>
+
+          <TextButton
+            onPress={() => goBack()}
+            isDefault={true}>
+            Back to deck
+          </TextButton>
         </View>
       )
     }
 
-    const currentQuestion = deck.questions[currentQuestionIndex];
+    const currentQuestion = questions[currentQuestionIndex];
 
     return (
       <View style={styles.rootContainer}>
-        <Text>{this.state.currentQuestionIndex + 1} / {deck.questions.length}</Text>
+        <Text>{this.state.currentQuestionIndex + 1} / {questions.length}</Text>
 
         <View style={styles.container}>
           <Text style={styles.question}>{currentQuestion.question}</Text>
-            {!isFlipped 
-              ?           
-                <TouchableOpacity 
-                  onPress={() => this.setState({ isFlipped: true })}>
-                  <Text style={styles.seeAnswer}>Click to answer</Text>
-                </TouchableOpacity>
-              :
-                <View style={styles.container}>
-                  <Text style={styles.answer}>{currentQuestion.answer}</Text>
-                  
-                  <TextButton 
-                    onPress={() => this.nextQuestion(true)}
-                  >
-                    Correct
+          {!isFlipped
+            ?
+            <TouchableOpacity
+              onPress={() => this.setState({ isFlipped: true })}>
+              <Text style={styles.seeAnswer}>Click to answer</Text>
+            </TouchableOpacity>
+            :
+            <View style={styles.container}>
+              <Text style={styles.answer}>{currentQuestion.answer}</Text>
+
+              <TextButton
+                onPress={() => this.nextQuestion(true)}
+              >
+                Correct
                   </TextButton>
-          
-                  <TextButton 
-                    onPress={() => this.nextQuestion()}
-                    isDefault={true}>
-                    Incorrect
+
+              <TextButton
+                onPress={() => this.nextQuestion()}
+                isDefault={true}>
+                Incorrect
                   </TextButton>
-                </View>
-            }
-                      
-            <TextButton 
-              onPress={() => this.reset()}
-              isDefault={true}>
-              Restart Quiz
+            </View>
+          }
+
+          <TextButton
+            onPress={() => this.reset()}
+            isDefault={true}>
+            Restart Quiz
             </TextButton>
         </View>
       </View>
@@ -116,12 +128,12 @@ const styles = StyleSheet.create({
   question: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,    
+    margin: 10,
   },
   answer: {
     fontSize: 16,
     textAlign: 'center',
-    margin: 10,  
+    margin: 10,
   },
   seeAnswer: {
     textAlign: 'center'
@@ -139,7 +151,7 @@ function mapStateToProps(state, { navigation }) {
 
 function mapDispatchToProps(dispatch, { navigation }) {
   return {
-    goBack: () => navigation.goBack(),
+    goBack: () => navigation.goBack()
   }
 }
 

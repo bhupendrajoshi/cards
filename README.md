@@ -1,8 +1,11 @@
 
 # React native app for creating and doing quizzes
 
-## to run (needs expo)
+## Supported platforms
+This app was tested on iOS simulator using expo and iPhone using expo
 
-`yarn install`
-`yarn start`
+## Try it out (needs expo)
+```yarn install```
+
+```yarn start```
 

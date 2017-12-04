@@ -11,11 +11,15 @@ class DeckDetail extends Component {
 
     return {
       title: entryId
-    }  
+    }
   }
 
   render() {
     const { deck, questionCount, navigation } = this.props;
+
+    if (!deck) {
+      return (<View></View>);
+    }
 
     return (
       <View style={styles.container}>
@@ -23,7 +27,7 @@ class DeckDetail extends Component {
 
         <Text style={styles.cardCount}>{questionCount} cards</Text>
 
-        <TextButton 
+        <TextButton
           onPress={() => navigation.navigate(
             'NewCard',
             { entryId: deck.key }
@@ -33,12 +37,12 @@ class DeckDetail extends Component {
           Add Card
         </TextButton>
 
-        {questionCount > 0 && 
+        {questionCount > 0 &&
           (
-            <TextButton 
+            <TextButton
               onPress={() => navigation.navigate(
                 'Quiz',
-                { 
+                {
                   entryId: deck.key,
                   questionIndex: 0
                 }
@@ -63,7 +67,7 @@ const styles = StyleSheet.create({
   deckTitle: {
     fontSize: 20,
     textAlign: 'center',
-    margin: 10,    
+    margin: 10,
   },
   cardCount: {
     fontSize: 10,
@@ -72,7 +76,7 @@ const styles = StyleSheet.create({
   },
   noCards: {
     textAlign: 'center',
-  } 
+  }
 })
 
 function mapStateToProps(state, { navigation }) {
